@@ -6,6 +6,7 @@ import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/cart.dart';
+import '../providers/products_provider.dart';
 
 enum FilterOptions {
   ONLY_FAVORITES,
@@ -19,6 +20,41 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyFavorites = false;
+  bool _isLoading = false;
+//  bool _isInit = true;
+//
+//  @override
+//  void didChangeDependencies() {
+//    if (_isInit) {
+//      setState(() {
+//        _isLoading = true;
+//      });
+//      initData();
+//    }
+//    _isInit = false;
+//    super.didChangeDependencies();
+//  }
+//
+//  Future<void> initData() async {
+//    try {
+//      await Provider.of<ProductsProvider>(context).fetchAndSetProduct();
+//      setState(() {
+//        _isLoading = false;
+//      });
+//    } catch (error) {
+//      print(error);
+//    }
+//  }
+
+  @override
+  void initState() {
+    _isLoading = true;
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<ProductsProvider>(context, listen: false).fetchAndSetProduct();
+      _isLoading = false;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +104,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading ? Center(child: CircularProgressIndicator(),) : ProductsGrid(_showOnlyFavorites),
     );
   }
 }
