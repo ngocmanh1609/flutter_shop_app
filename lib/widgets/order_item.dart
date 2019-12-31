@@ -1,44 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/orders_provider.dart' as ord;
+import '../providers/orders.dart' as ord;
 
 class OrderItem extends StatefulWidget {
-  final ord.OrderItem orderItem;
+  final ord.OrderItem order;
 
-  OrderItem(this.orderItem);
+  OrderItem(this.order);
 
   @override
   _OrderItemState createState() => _OrderItemState();
 }
 
 class _OrderItemState extends State<OrderItem> {
-  bool _isExpanded = false;
-
-  Widget itemWidget(String title, String price) {
-    return PreferredSize(
-      preferredSize: Size(double.infinity, 40),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              title,
-              style: Theme.of(context).textTheme.title,
-            ),
-            Text('\$${price}'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  double getHeightItemsList() {
-    // all items have the same height, so let's take the first item to calculate
-    double itemHeight = (itemWidget(widget.orderItem.orderItems[0].title, widget.orderItem.orderItems[0].price.toString()) as PreferredSize).preferredSize.height;
-    return itemHeight * widget.orderItem.orderItems.length;
-  }
+  var _expanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +24,46 @@ class _OrderItemState extends State<OrderItem> {
       child: Column(
         children: <Widget>[
           ListTile(
-            title: Text('\$${widget.orderItem.amount}'),
-            subtitle: Text(DateFormat('dd/MM/yyyy hh:mm')
-                .format(widget.orderItem.dateTime)),
+            title: Text('\$${widget.order.amount}'),
+            subtitle: Text(
+              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime),
+            ),
             trailing: IconButton(
-              icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+              icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
               onPressed: () {
                 setState(() {
-                  _isExpanded = !_isExpanded;
+                  _expanded = !_expanded;
                 });
               },
             ),
           ),
-          if (_isExpanded)
+          if (_expanded)
             Container(
-              width: double.infinity,
-              height: getHeightItemsList(),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+              height: min(widget.order.products.length * 20.0 + 10, 100),
               child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                children: widget.orderItem.orderItems
-                    .map((item) => itemWidget(item.title, item.price.toString()),)
+                children: widget.order.products
+                    .map(
+                      (prod) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                prod.title,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${prod.quantity}x \$${prod.price}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
+                    )
                     .toList(),
               ),
             )
