@@ -51,7 +51,6 @@ class Products with ChangeNotifier {
     // if (_showFavoritesOnly) {
     //   return _items.where((prodItem) => prodItem.isFavorite).toList();
     // }
-    // ignore: sdk_version_ui_as_code
     return [..._items];
   }
 

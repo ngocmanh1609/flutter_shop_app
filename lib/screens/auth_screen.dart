@@ -299,7 +299,6 @@ class _AuthCardState extends State<AuthCard>
                 SizedBox(
                   height: 20,
                 ),
-                // ignore: sdk_version_ui_as_code
                 if (_isLoading)
                   CircularProgressIndicator()
                 else

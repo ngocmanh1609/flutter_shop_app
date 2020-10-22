@@ -27,7 +27,6 @@ class Orders with ChangeNotifier {
   Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
-    // ignore: sdk_version_ui_as_code
     return [..._orders];
   }
 

@@ -18,7 +18,6 @@ class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    // ignore: sdk_version_ui_as_code
     return {..._items};
   }
 
