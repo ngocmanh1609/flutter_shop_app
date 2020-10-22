@@ -51,6 +51,7 @@ class Products with ChangeNotifier {
     // if (_showFavoritesOnly) {
     //   return _items.where((prodItem) => prodItem.isFavorite).toList();
     // }
+    // ignore: sdk_version_ui_as_code
     return [..._items];
   }
 
@@ -73,7 +74,8 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
-    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
         'https://flutter-shop-a8b96.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
